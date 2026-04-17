@@ -95,10 +95,10 @@ export default function Home() {
           >
             <h2 className="text-center text-slate-500 text-sm tracking-widest mb-8">数说探月</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <StatCard value={stats.us_total} label="美国任务总数" color="blue" />
-              <StatCard value={stats.us_landings} label="美国着陆次数" color="blue" />
               <StatCard value={stats.cn_total} label="中国任务总数" color="red" />
               <StatCard value={stats.cn_landings} label="中国着陆次数" color="red" />
+              <StatCard value={stats.us_total} label="美国任务总数" color="blue" />
+              <StatCard value={stats.us_landings} label="美国着陆次数" color="blue" />
             </div>
           </motion.div>
         </div>
@@ -108,21 +108,6 @@ export default function Home() {
       <div className="max-w-4xl mx-auto px-6 pb-24">
         <h2 className="text-center text-slate-500 text-sm tracking-widest mb-8">选择探索</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Link to="/usa">
-            <motion.div
-              whileHover={{ scale: 1.02 }}
-              className="bg-space-800 border border-blue-500/20 rounded-2xl p-8 glow-blue cursor-pointer"
-            >
-              <div className="text-4xl mb-4">🇺🇸</div>
-              <h3 className="text-2xl font-bold text-white mb-2">美国探月</h3>
-              <p className="text-slate-400 text-sm leading-relaxed">
-                从1958年先驱者计划到阿波罗登月，再到正在进行的阿尔忒弥斯计划——
-                美国半个多世纪的奔月历程。
-              </p>
-              <div className="mt-4 text-blue-400 text-sm">探索 {stats?.us_total ?? "…"} 个任务 →</div>
-            </motion.div>
-          </Link>
-
           <Link to="/china">
             <motion.div
               whileHover={{ scale: 1.02 }}
@@ -135,6 +120,21 @@ export default function Home() {
                 嫦娥工程书写了中国航天最辉煌的篇章之一。
               </p>
               <div className="mt-4 text-red-400 text-sm">探索 {stats?.cn_total ?? "…"} 个任务 →</div>
+            </motion.div>
+          </Link>
+
+          <Link to="/usa">
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              className="bg-space-800 border border-blue-500/20 rounded-2xl p-8 glow-blue cursor-pointer"
+            >
+              <div className="text-4xl mb-4">🇺🇸</div>
+              <h3 className="text-2xl font-bold text-white mb-2">美国探月</h3>
+              <p className="text-slate-400 text-sm leading-relaxed">
+                从1958年先驱者计划到阿波罗登月，再到正在进行的阿尔忒弥斯计划——
+                美国半个多世纪的奔月历程。
+              </p>
+              <div className="mt-4 text-blue-400 text-sm">探索 {stats?.us_total ?? "…"} 个任务 →</div>
             </motion.div>
           </Link>
         </div>
