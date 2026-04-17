@@ -9,8 +9,8 @@ interface LandingSite {
   position: THREE.Vector3;
 }
 
-// NASA's Moon GLB model has radius ~1737 units — we normalise to r=1
-const MODEL_SCALE = 1 / 1737;
+// GLB bounding box is ±500 units → scale to radius 1
+const MODEL_SCALE = 1 / 500;
 
 function latLonToVec3(lat: number, lon: number, radius: number): THREE.Vector3 {
   const phi = (90 - lat) * (Math.PI / 180);
@@ -51,7 +51,7 @@ function LandingMarker({
         onPointerLeave={() => setHovered(false)}
         onClick={(e: ThreeEvent<MouseEvent>) => { e.stopPropagation(); onSelect(selected ? null : site.mission); }}
       >
-        <sphereGeometry args={[0.025, 8, 8]} />
+        <sphereGeometry args={[0.032, 8, 8]} />
         <meshStandardMaterial
           color={isUS ? "#3b82f6" : "#ef4444"}
           emissive={isUS ? "#1d4ed8" : "#b91c1c"}
@@ -116,9 +116,10 @@ function Moon({ missions, onSelect, selectedId }: {
 
   return (
     <>
-      <ambientLight intensity={0.2} />
-      <directionalLight position={[5, 3, 5]} intensity={1.4} color="#fff5e0" />
-      <directionalLight position={[-8, -2, -5]} intensity={0.08} color="#4488ff" />
+      {/* 主光：模拟太阳，产生明显昼夜分界线 */}
+      <directionalLight position={[6, 2, 4]} intensity={2.2} color="#fff8f0" />
+      {/* 极弱补光：让阴影面依然可见 */}
+      <directionalLight position={[-6, -1, -4]} intensity={0.12} color="#6688bb" />
 
       <Suspense fallback={<FallbackMoon />}>
         <NasaMoon />
@@ -152,15 +153,16 @@ export default function MoonGlobe({
 
   return (
     <div className="relative w-full h-full">
-      <Canvas camera={{ position: [0, 0, 2.4], fov: 45 }}>
+      <Canvas camera={{ position: [0, 0, 2.4], fov: 50 }}>
         <Moon missions={missions} onSelect={handleSelect} selectedId={selected?.id ?? null} />
         <OrbitControls
           enableZoom
-          minDistance={1.5}
-          maxDistance={6}
+          minDistance={1.05}
+          maxDistance={8}
           autoRotate={!selected}
-          autoRotateSpeed={0.4}
+          autoRotateSpeed={0.25}
           enableDamping
+          dampingFactor={0.08}
         />
       </Canvas>
 
