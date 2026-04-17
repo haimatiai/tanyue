@@ -1,6 +1,6 @@
 import { useRef, useState, useMemo, Suspense } from "react";
-import { Canvas, useFrame, useLoader, ThreeEvent } from "@react-three/fiber";
-import { OrbitControls, Html } from "@react-three/drei";
+import { Canvas, useFrame, ThreeEvent } from "@react-three/fiber";
+import { OrbitControls, Html, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import type { Mission } from "../../types/mission";
 
@@ -8,6 +8,9 @@ interface LandingSite {
   mission: Mission;
   position: THREE.Vector3;
 }
+
+// NASA's Moon GLB model has radius ~1737 units — we normalise to r=1
+const MODEL_SCALE = 1 / 1737;
 
 function latLonToVec3(lat: number, lon: number, radius: number): THREE.Vector3 {
   const phi = (90 - lat) * (Math.PI / 180);
@@ -32,7 +35,7 @@ function LandingMarker({
   const [hovered, setHovered] = useState(false);
   const isUS = site.mission.country === "US";
 
-  useFrame((_, delta) => {
+  useFrame(() => {
     if (meshRef.current) {
       meshRef.current.scale.setScalar(
         1 + Math.sin(Date.now() * 0.003) * (selected || hovered ? 0.4 : 0.15)
@@ -58,7 +61,9 @@ function LandingMarker({
       {(hovered || selected) && (
         <Html distanceFactor={6} style={{ pointerEvents: "none" }}>
           <div className={`px-2 py-1 rounded text-xs whitespace-nowrap font-medium ${
-            isUS ? "bg-blue-900/90 text-blue-100 border border-blue-500/50" : "bg-red-900/90 text-red-100 border border-red-500/50"
+            isUS
+              ? "bg-blue-900/90 text-blue-100 border border-blue-500/50"
+              : "bg-red-900/90 text-red-100 border border-red-500/50"
           }`}>
             {site.mission.name}
           </div>
@@ -68,24 +73,27 @@ function LandingMarker({
   );
 }
 
-function RotatingMoon() {
-  const ref = useRef<THREE.Mesh>(null!);
-  const texture = useLoader(THREE.TextureLoader, "/moon.jpg");
-  useFrame((_, delta) => { ref.current.rotation.y += delta * 0.03; });
+function NasaMoon() {
+  const groupRef = useRef<THREE.Group>(null!);
+  const { scene } = useGLTF("/moon.glb");
+
+  useFrame((_, delta) => {
+    groupRef.current.rotation.y += delta * 0.03;
+  });
+
   return (
-    <mesh ref={ref}>
-      <sphereGeometry args={[1, 64, 64]} />
-      <meshStandardMaterial map={texture} roughness={0.95} metalness={0.0} />
-    </mesh>
+    <group ref={groupRef} scale={[MODEL_SCALE, MODEL_SCALE, MODEL_SCALE]}>
+      <primitive object={scene} />
+    </group>
   );
 }
 
-function RotatingMoonFallback() {
+function FallbackMoon() {
   const ref = useRef<THREE.Mesh>(null!);
   useFrame((_, delta) => { ref.current.rotation.y += delta * 0.03; });
   return (
     <mesh ref={ref}>
-      <sphereGeometry args={[1, 64, 64]} />
+      <sphereGeometry args={[1, 48, 48]} />
       <meshStandardMaterial color="#7a7a78" roughness={0.95} metalness={0.0} />
     </mesh>
   );
@@ -108,12 +116,12 @@ function Moon({ missions, onSelect, selectedId }: {
 
   return (
     <>
-      <ambientLight intensity={0.15} />
-      <directionalLight position={[5, 3, 5]} intensity={1.2} color="#ffe8c0" />
-      <directionalLight position={[-8, -2, -5]} intensity={0.05} color="#4488ff" />
+      <ambientLight intensity={0.2} />
+      <directionalLight position={[5, 3, 5]} intensity={1.4} color="#fff5e0" />
+      <directionalLight position={[-8, -2, -5]} intensity={0.08} color="#4488ff" />
 
-      <Suspense fallback={<RotatingMoonFallback />}>
-        <RotatingMoon />
+      <Suspense fallback={<FallbackMoon />}>
+        <NasaMoon />
       </Suspense>
 
       {sites.map((site) => (
@@ -147,7 +155,7 @@ export default function MoonGlobe({
       <Canvas camera={{ position: [0, 0, 2.4], fov: 45 }}>
         <Moon missions={missions} onSelect={handleSelect} selectedId={selected?.id ?? null} />
         <OrbitControls
-          enableZoom={true}
+          enableZoom
           minDistance={1.5}
           maxDistance={6}
           autoRotate={!selected}
