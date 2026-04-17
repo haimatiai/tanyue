@@ -118,8 +118,10 @@ function Moon({ missions, onSelect, selectedId }: {
     <>
       {/* 主光：模拟太阳，产生明显昼夜分界线 */}
       <directionalLight position={[6, 2, 4]} intensity={2.2} color="#fff8f0" />
-      {/* 极弱补光：让阴影面依然可见 */}
-      <directionalLight position={[-6, -1, -4]} intensity={0.12} color="#6688bb" />
+      {/* 补光：让暗面细节可见，模拟地球反照 */}
+      <directionalLight position={[-6, -1, -4]} intensity={0.45} color="#7799cc" />
+      {/* 环境底光：确保极暗区域也有基础可见度 */}
+      <ambientLight intensity={0.12} />
 
       <Suspense fallback={<FallbackMoon />}>
         <NasaMoon />
