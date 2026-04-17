@@ -144,7 +144,7 @@ export default function MoonGlobe({
 
   return (
     <div className="relative w-full h-full">
-      <Canvas camera={{ position: [0, 0, 2.8], fov: 45 }}>
+      <Canvas camera={{ position: [0, 0, 2.4], fov: 45 }}>
         <Moon missions={missions} onSelect={handleSelect} selectedId={selected?.id ?? null} />
         <OrbitControls
           enableZoom={true}

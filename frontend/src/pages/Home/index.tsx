@@ -30,10 +30,8 @@ export default function Home() {
       {/* Hero */}
       <div className="relative h-screen flex flex-col items-center justify-center">
         {/* Moon globe */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="w-full max-w-2xl h-[70vh]">
-            <MoonGlobe missions={missions} onMissionSelect={setSelectedMission} />
-          </div>
+        <div className="absolute inset-0">
+          <MoonGlobe missions={missions} onMissionSelect={setSelectedMission} />
         </div>
 
         {/* Title overlay */}
