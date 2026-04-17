@@ -158,9 +158,7 @@ export default function MoonGlobe({
       <Canvas camera={{ position: [0, 0, 2.4], fov: 50 }}>
         <Moon missions={missions} onSelect={handleSelect} selectedId={selected?.id ?? null} />
         <OrbitControls
-          enableZoom
-          minDistance={1.05}
-          maxDistance={8}
+          enableZoom={false}
           autoRotate={!selected}
           autoRotateSpeed={0.25}
           enableDamping
