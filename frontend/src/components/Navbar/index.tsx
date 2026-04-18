@@ -2,8 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 
 const links = [
   { to: "/", label: "首页" },
-  { to: "/china", label: "中国探月" },
-  { to: "/usa", label: "美国探月" },
+  { to: "/history", label: "奔月简史" },
 ];
 
 export default function Navbar() {

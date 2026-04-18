@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import SpacecraftViewer from "../../components/SpacecraftViewer";
 import { fetchMission } from "../../api/missions";
@@ -7,6 +7,13 @@ import type { Mission } from "../../types/mission";
 
 export default function MissionDetail() {
   const { id } = useParams<{ id: string }>();
+  const location = useLocation();
+  const from: string = (location.state as any)?.from ?? "/history";
+  const backLabel: Record<string, string> = {
+    "/history": "奔月简史",
+    "/china": "中国探月",
+    "/usa": "美国探月",
+  };
   const [mission, setMission] = useState<Mission | null>(null);
   const [error, setError] = useState(false);
 
@@ -38,10 +45,10 @@ export default function MissionDetail() {
       <div className="max-w-6xl mx-auto px-6">
         {/* Back */}
         <Link
-          to={isUS ? "/usa" : "/china"}
+          to={from}
           className="inline-flex items-center gap-2 text-slate-500 hover:text-slate-300 text-sm mb-8 transition-colors"
         >
-          ← 返回{isUS ? "美国" : "中国"}探月
+          ← 返回{backLabel[from] ?? "奔月简史"}
         </Link>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

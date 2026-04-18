@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import type { Mission } from "../../types/mission";
 
@@ -22,6 +22,7 @@ export default function MissionCard({
   mission: Mission;
   index?: number;
 }) {
+  const location = useLocation();
   const isUS = mission.country === "US";
   const accentColor = isUS ? "border-blue-500/30 hover:border-blue-400/60" : "border-red-500/30 hover:border-red-400/60";
   const tagColor = isUS ? "bg-blue-500/20 text-blue-300" : "bg-red-500/20 text-red-300";
@@ -32,7 +33,7 @@ export default function MissionCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05 }}
     >
-      <Link to={`/mission/${mission.id}`}>
+      <Link to={`/mission/${mission.id}`} state={{ from: location.pathname }}>
         <div className={`mission-card bg-space-800 border rounded-xl p-5 ${accentColor} ${
           isUS ? "glow-blue" : "glow-red"
         }`}>

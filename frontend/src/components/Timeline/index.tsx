@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import type { Mission } from "../../types/mission";
 
@@ -16,6 +16,7 @@ function getDot(status: string) {
 }
 
 export default function Timeline({ missions, country }: { missions: Mission[]; country: "US" | "CN" }) {
+  const location = useLocation();
   const sorted = [...missions].sort((a, b) => b.launch_date.localeCompare(a.launch_date));
   const accent = country === "US" ? "border-blue-500" : "border-red-500";
   const accentText = country === "US" ? "text-blue-400" : "text-red-400";
@@ -43,7 +44,7 @@ export default function Timeline({ missions, country }: { missions: Mission[]; c
             {/* Connector */}
             <div className="absolute -left-8 top-6 w-4 h-px bg-slate-700" />
 
-            <Link to={`/mission/${mission.id}`}>
+            <Link to={`/mission/${mission.id}`} state={{ from: location.pathname }}>
               <div className={`group bg-space-800 border border-slate-700/50 hover:${accent} rounded-xl p-4 transition-all hover:-translate-y-0.5`}>
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1 min-w-0">
