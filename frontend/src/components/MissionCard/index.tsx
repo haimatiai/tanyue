@@ -32,11 +32,13 @@ export default function MissionCard({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05 }}
+      whileHover={{ y: -6 }}
+      whileTap={{ scale: 0.98 }}
     >
-      <Link to={`/mission/${mission.id}`} state={{ from: location.pathname }}>
-        <div className={`mission-card bg-space-800 border rounded-xl p-5 ${accentColor} ${
+      <Link to={`/mission/${mission.id}`} state={{ from: location.pathname }} aria-label={`查看${mission.name}任务详情`}>
+        <div className={`mission-card bg-space-800/90 border rounded-xl p-5 ${accentColor} ${
           isUS ? "glow-blue" : "glow-red"
-        }`}>
+        } backdrop-blur-sm hover:shadow-2xl transition-all duration-300 group cursor-pointer`}>
           <div className="flex items-start justify-between gap-3 mb-3">
             <div>
               <h3 className="text-lg font-bold text-white">{mission.name}</h3>
