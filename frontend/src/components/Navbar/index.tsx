@@ -2,6 +2,8 @@ import { Link, useLocation } from "react-router-dom";
 
 const links = [
   { to: "/", label: "首页" },
+  { to: "/china", label: "中国探月" },
+  { to: "/usa", label: "美国探月" },
   { to: "/history", label: "奔月简史" },
 ];
 
@@ -10,7 +12,10 @@ export default function Navbar() {
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4"
-      style={{ background: "linear-gradient(to bottom, rgba(2,4,8,0.95) 0%, transparent 100%)" }}>
+      style={{ background: "linear-gradient(to bottom, rgba(2,4,8,0.95) 0%, transparent 100%" }}
+      role="navigation"
+      aria-label="主导航"
+    >
       <Link to="/" className="flex items-center gap-2 group">
         <span className="text-2xl">🌕</span>
         <span className="text-xl font-bold tracking-widest text-white group-hover:text-moon-100 transition-colors">

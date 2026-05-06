@@ -38,7 +38,17 @@ export default function MissionDetail() {
   );
 
   const isUS = mission.country === "US";
-  const accent = isUS ? "blue" : "red";
+  const accentClasses = isUS ? {
+    bg: "bg-blue-500/20",
+    text: "text-blue-300",
+    border: "border-blue-500/20",
+    dot: "bg-blue-400",
+  } : {
+    bg: "bg-red-500/20",
+    text: "text-red-300",
+    border: "border-red-500/20",
+    dot: "bg-red-400",
+  };
 
   return (
     <div className="min-h-screen pt-20 pb-16">
@@ -57,7 +67,7 @@ export default function MissionDetail() {
             {/* Title */}
             <div className="mb-6">
               <div className="flex items-center gap-3 mb-2">
-                <span className={`text-xs px-3 py-1 rounded-full bg-${accent}-500/20 text-${accent}-300 font-medium`}>
+                <span className={`text-xs px-3 py-1 rounded-full ${accentClasses.bg} ${accentClasses.text} font-medium`}>
                   {mission.program}
                 </span>
                 <span className={`text-xs px-3 py-1 rounded-full ${
@@ -113,7 +123,7 @@ export default function MissionDetail() {
                 <ul className="space-y-2">
                   {mission.achievements.map((a, i) => (
                     <li key={i} className="flex items-start gap-2 text-sm text-slate-300">
-                      <span className={`mt-1 shrink-0 w-1.5 h-1.5 rounded-full bg-${accent}-400`} />
+                      <span className={`mt-1 shrink-0 w-1.5 h-1.5 rounded-full ${accentClasses.dot}`} />
                       {a}
                     </li>
                   ))}
@@ -125,7 +135,7 @@ export default function MissionDetail() {
           {/* Right: 3D model + specs */}
           <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.1 }}>
             {/* 3D Spacecraft */}
-            <div className={`bg-space-800 border border-${accent}-500/20 rounded-2xl overflow-hidden mb-6`}>
+            <div className={`bg-space-800 border ${accentClasses.border} rounded-2xl overflow-hidden mb-6`}>
               <div className="h-72">
                 <SpacecraftViewer modelType={mission.model_type} />
               </div>
@@ -134,7 +144,7 @@ export default function MissionDetail() {
 
             {/* Technical specs */}
             {Object.keys(mission.specs).length > 0 && (
-              <div className={`bg-space-800 border border-${accent}-500/20 rounded-2xl p-5`}>
+              <div className={`bg-space-800 border ${accentClasses.border} rounded-2xl p-5`}>
                 <h3 className="text-sm font-semibold text-slate-400 mb-4">技术参数</h3>
                 <div className="space-y-3">
                   {Object.entries(mission.specs).map(([key, val]) => (
@@ -149,7 +159,7 @@ export default function MissionDetail() {
 
             {/* Landing coords */}
             {mission.landing_coords && (
-              <div className={`mt-4 bg-space-800 border border-${accent}-500/20 rounded-xl p-4`}>
+              <div className={`mt-4 bg-space-800 border ${accentClasses.border} rounded-xl p-4`}>
                 <h3 className="text-xs text-slate-500 mb-2">着陆坐标</h3>
                 <div className="flex gap-6 text-sm text-white font-mono">
                   <span>纬度 {mission.landing_coords.lat.toFixed(3)}°</span>

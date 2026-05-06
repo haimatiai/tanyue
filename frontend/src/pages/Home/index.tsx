@@ -5,11 +5,25 @@ import MoonGlobe from "../../components/MoonGlobe";
 import { fetchAllMissions, fetchStats } from "../../api/missions";
 import type { Mission, Stats } from "../../types/mission";
 
-function StatCard({ value, label, color }: { value: string | number; label: string; color: string }) {
+function StatCard({ value, label, color, icon }: { value: string | number; label: string; color: "red" | "blue"; icon: string }) {
+  const colorClasses = {
+    red: {
+      border: "border-red-500/20",
+      text: "text-red-400",
+      glow: "hover:shadow-red-500/20",
+    },
+    blue: {
+      border: "border-blue-500/20",
+      text: "text-blue-400",
+      glow: "hover:shadow-blue-500/20",
+    },
+  };
+
   return (
-    <div className={`bg-space-800/80 border border-${color}-500/20 rounded-xl p-4 text-center`}>
-      <div className={`text-3xl font-bold text-${color}-400`}>{value}</div>
-      <div className="text-xs text-slate-500 mt-1">{label}</div>
+    <div className={`bg-space-800/80 ${colorClasses[color].border} rounded-xl p-6 text-center backdrop-blur-sm hover:shadow-xl ${colorClasses.glow} transition-all duration-300 group cursor-default`}>
+      <div className="text-3xl mb-2 group-hover:scale-110 transition-transform duration-300">{icon}</div>
+      <div className={`text-4xl font-bold ${colorClasses[color].text} mb-1`}>{value}</div>
+      <div className="text-xs text-slate-400">{label}</div>
     </div>
   );
 }
@@ -39,13 +53,21 @@ export default function Home() {
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
-          className="absolute top-24 text-center"
+          className="absolute top-24 text-center z-10"
         >
-          <h1 className="text-6xl font-bold tracking-[0.2em] text-white mb-2"
-            style={{ textShadow: "0 0 40px rgba(200,191,170,0.4)" }}>
-            探月
-          </h1>
-          <p className="text-slate-400 tracking-widest text-sm">人类奔月简史 · 从梦想到现实</p>
+          <div className="bg-space-900/40 backdrop-blur-md rounded-3xl px-12 py-8 border border-white/10">
+            <h1 className="text-7xl font-bold tracking-[0.3em] text-white mb-3"
+              style={{
+                textShadow: "0 0 60px rgba(200,191,170,0.5), 0 4px 20px rgba(0,0,0,0.8)",
+                background: "linear-gradient(135deg, #ffffff 0%, #c8bfaa 50%, #ffffff 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text"
+              }}>
+              探月
+            </h1>
+            <p className="text-slate-300 tracking-[0.25em] text-base font-light">人类奔月简史 · 从梦想到现实</p>
+          </div>
         </motion.div>
 
         {/* Selected mission popup */}
@@ -60,7 +82,7 @@ export default function Home() {
                 ? "bg-blue-950/90 border-blue-500/40"
                 : "bg-red-950/90 border-red-500/40"
             }`}
-              onClick={() => navigate(`/mission/${selectedMission.id}`)}>
+              onClick={() => navigate(`/mission/${selectedMission.id}`, { state: { from: "/" } })}>
               <div className="flex justify-between items-start">
                 <div>
                   <p className="font-bold text-white">{selectedMission.name}</p>
@@ -95,10 +117,10 @@ export default function Home() {
           >
             <h2 className="text-center text-slate-500 text-sm tracking-widest mb-8">数说探月</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <StatCard value={stats.cn_total} label="中国任务总数" color="red" />
-              <StatCard value={stats.cn_landings} label="中国着陆次数" color="red" />
-              <StatCard value={stats.us_total} label="美国任务总数" color="blue" />
-              <StatCard value={stats.us_landings} label="美国着陆次数" color="blue" />
+              <StatCard value={stats.cn_total} label="中国任务总数" color="red" icon="🚀" />
+              <StatCard value={stats.cn_landings} label="中国着陆次数" color="red" icon="🌙" />
+              <StatCard value={stats.us_total} label="美国任务总数" color="blue" icon="🚀" />
+              <StatCard value={stats.us_landings} label="美国着陆次数" color="blue" icon="🌙" />
             </div>
           </motion.div>
         </div>
@@ -110,31 +132,39 @@ export default function Home() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Link to="/china">
             <motion.div
-              whileHover={{ scale: 1.02 }}
-              className="bg-space-800 border border-red-500/20 rounded-2xl p-8 glow-red cursor-pointer"
+              whileHover={{ scale: 1.02, y: -5 }}
+              whileTap={{ scale: 0.98 }}
+              className="bg-space-800/80 border border-red-500/30 rounded-2xl p-8 cursor-pointer backdrop-blur-sm hover:border-red-400/50 transition-all duration-300 group"
             >
-              <div className="text-4xl mb-4">🇨🇳</div>
+              <div className="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">🇨🇳</div>
               <h3 className="text-2xl font-bold text-white mb-2">中国探月</h3>
               <p className="text-slate-400 text-sm leading-relaxed">
                 从2007年嫦娥一号到首次月球背面采样返回——
                 嫦娥工程书写了中国航天最辉煌的篇章之一。
               </p>
-              <div className="mt-4 text-red-400 text-sm">探索 {stats?.cn_total ?? "…"} 个任务 →</div>
+              <div className="mt-4 flex items-center gap-2 text-red-400 text-sm font-medium group-hover:gap-3 transition-all duration-300">
+                探索 {stats?.cn_total ?? "…"} 个任务
+                <span>→</span>
+              </div>
             </motion.div>
           </Link>
 
           <Link to="/usa">
             <motion.div
-              whileHover={{ scale: 1.02 }}
-              className="bg-space-800 border border-blue-500/20 rounded-2xl p-8 glow-blue cursor-pointer"
+              whileHover={{ scale: 1.02, y: -5 }}
+              whileTap={{ scale: 0.98 }}
+              className="bg-space-800/80 border border-blue-500/30 rounded-2xl p-8 cursor-pointer backdrop-blur-sm hover:border-blue-400/50 transition-all duration-300 group"
             >
-              <div className="text-4xl mb-4">🇺🇸</div>
+              <div className="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">🇺🇸</div>
               <h3 className="text-2xl font-bold text-white mb-2">美国探月</h3>
               <p className="text-slate-400 text-sm leading-relaxed">
                 从1958年先驱者计划到阿波罗登月，再到正在进行的阿尔忒弥斯计划——
                 美国半个多世纪的奔月历程。
               </p>
-              <div className="mt-4 text-blue-400 text-sm">探索 {stats?.us_total ?? "…"} 个任务 →</div>
+              <div className="mt-4 flex items-center gap-2 text-blue-400 text-sm font-medium group-hover:gap-3 transition-all duration-300">
+                探索 {stats?.us_total ?? "…"} 个任务
+                <span>→</span>
+              </div>
             </motion.div>
           </Link>
         </div>
